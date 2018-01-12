@@ -41,29 +41,26 @@ test=pd.read_csv("E:/Monsoon_Data/X_validation.csv")
 ydf=pd.read_csv("E:/Monsoon_Data/y_train.csv")
 y=ydf[['Dependent_Variable']]
 
-#______________________________________________________________________
+# Preview size of train data & test data 
 
 data.shape
 test.shape
 ydf.shape
-
-#______________________________________________________________________
-
 data.info()
 y.info()
 
-#_____________________________________________________________________
 
-# Check data initially
+# Check Data header 
 
 data.head()
 y.head()
 
-#_______________________________________________________________________
+# Remove unnecessary features at first 
 
 del ydf['Unique_ID']
 Id=test['Unique_ID']
 
+# Merge the train test data
 
 full=pd.concat([data,test])
 full.index=range(44067)
@@ -84,7 +81,7 @@ def null_predict(data):
     
 null_predict(data)
  
-## Delete features of most null values
+## Delete features having most null values
 
 full=full.drop(['N32','N26','N27','N25','N31','N30','N29','N28'],axis=1)
 
@@ -94,7 +91,7 @@ data.describe()
 
 ##  Exploratory data analytics
 
-#1 Categorical features
+#1 For Categorical features
 
 temp=pd.concat([data,y],axis=1)
 
@@ -123,7 +120,7 @@ sns.distplot(temp['C8'])
 sns.barplot(x='C8',y='Dependent_Variable',data=temp)
 
 
-#2 Continuous variables
+#2 For Continuous variables
 
 cont=data[['N1','N2','N3','N4','N5','N6','N7','N8','N9','N10','N11','N12','N13','N14','N15','N16','N17','N18','N19','N20','N21','N22','N23','N24','N33','N34','N35']]
 
@@ -150,13 +147,16 @@ facet.add_legend()
 facet.set(xlim=(0, temp1['N2'].max()))
 
 
-#add one more
 sns.distplot(cont1['N3'])
 
 facet = sns.FacetGrid(data=temp1, hue="Dependent_Variable",aspect=4)
 facet.map(sns.kdeplot,'N3',shade= True)
 facet.add_legend()
 facet.set(xlim=(0, temp1['N3'].max()))
+
+fig, axis1 = plt.subplots(1,1,figsize=(12,4))
+average= temp1[["N3", "Dependent_Variable"]].groupby(['N3'],as_index=False).mean()
+sns.barplot(x='N3', y='Dependent_Variable', data=average)
 
 
 sns.distplot(cont1['N4'])
@@ -175,13 +175,16 @@ facet.add_legend()
 facet.set(xlim=(0, temp1['N5'].max()))
 
 
-#one more
 sns.distplot(cont1['N6'])
 
 facet = sns.FacetGrid(data=temp1, hue="Dependent_Variable",aspect=4)
 facet.map(sns.kdeplot,'N6',shade= True)
 facet.add_legend()
 facet.set(xlim=(0, temp1['N6'].max()))
+
+fig, axis1 = plt.subplots(1,1,figsize=(12,4))
+average= temp1[["N6", "Dependent_Variable"]].groupby(['N6'],as_index=False).mean()
+sns.barplot(x='N6', y='Dependent_Variable', data=average)
 
 
 sns.distplot(cont1['N7'])
@@ -355,21 +358,21 @@ facet.set(xlim=(0, temp1['N35'].max()))
 # Missing Value Imputation By KNN
 
 # Correlated Variables
-# N2-->N35l,N20m
-# N4-->N8n,N20m,N9n
-# N6-->N1n,N19m,N21m 
-# N10-->N21m,N14l,N12m
-# N11-->N13l,N6l(may be)
-# N13-->N11l,N22m
-# N14-->N21m,N10l
-# N15-->N21m,N6l
-# N17-->N9n,N4m,N24n,N8n
-# N19-->N6l,N1n 
-# N20-->N4m,N8n
-# N21-->N14l,N10l,N6l
-# N22-->N13l,N4m
+# N2-->N35,N20
+# N4-->N8,N20,N9
+# N6-->N1,N19,N21 
+# N10-->N21,N14,N12
+# N11-->N13
+# N13-->N11,N22
+# N14-->N21,N10
+# N15-->N21,N6
+# N17-->N9,N4,N24,N8
+# N19-->N6,N1
+# N20-->N4,N8
+# N21-->N14,N10,N6
+# N22-->N13,N4
 # N23-->N24
-# N35-->N20m,N2m
+# N35-->N20,N2
 
 
 data=full[0:33050]
@@ -385,7 +388,7 @@ pred=model.predict(test)
 
 full.loc[full.N23.isnull(),['N23']]=pred
 
-#__________________________________________________________________
+##xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 full.loc[full.N13.isnull(),'N13']=3
 
@@ -402,7 +405,7 @@ pred=model.predict(test)
 
 full.loc[full.N22.isnull(),['N22']]=pred
 
-#_________________________________________________________________
+##xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 data=full[0:33050]
 
@@ -415,7 +418,7 @@ pred=model.predict(test)
 
 full.loc[full.N11.isnull(),['N11']]=pred
 
-#__________________________________________________________________
+##xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 full.loc[full.N6.isnull(),'N6']=full['N6'].mean()
 
@@ -434,7 +437,7 @@ pred=model.predict(test)
 
 full.loc[full.N21.isnull(),['N21']]=pred
 
-#________________________________________________________________
+##xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 data=full[0:33050]
 
@@ -447,7 +450,7 @@ pred=model.predict(test)
 
 full.loc[full.N15.isnull(),['N15']]=pred
 
-#________________________________________________________________
+##xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 data=full[0:33050]
 
@@ -460,7 +463,7 @@ pred=model.predict(test)
 
 full.loc[full.N19.isnull(),['N19']]=pred
 
-#________________________________________________________________
+##xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 data=full[0:33050]
 
@@ -473,7 +476,7 @@ pred=model.predict(test)
 
 full.loc[full.N20.isnull(),['N20']]=pred
 
-#________________________________________________________________
+##xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 data=full[0:33050]
 
@@ -486,7 +489,7 @@ pred=model.predict(test)
 
 full.loc[full.N17.isnull(),['N17']]=pred
 
-#________________________________________________________________
+##xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 full.loc[full.N35.isnull(),'N35']=full['N35'].median()
 
@@ -513,7 +516,7 @@ data=full[0:33050]
 # Create ANOVA F-Values
 f_classif(data, y)
 
-# Chi2 
+# Chi2 values
 
 data2=data[['C2','C3','C4','C5','C6','C7']]
 data3 = data2.astype(int)
@@ -599,7 +602,7 @@ def plot_learning_curve(estimator, title, X, y, ylim=None, cv=None,
 g = plot_learning_curve(GBC_best,"GBM learning curves",train_x,train_y,cv=kfold)
 
 
-######################################################################
+##xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 test=full.loc[33050:]
 test=test[['C1','C2','C3','C4','C5','C6','C7','N1','N6','N8','N9','N10','N11','N13','N14','N15','N17','N19','N20','N21','N22','N23','N24','N33','N34','N35']]
@@ -608,14 +611,4 @@ output=pd.DataFrame([result[i][1] for i in range(11017)],columns=['Class_1_Proba
 output[:5]
 out=pd.concat([Id,output],axis=1)
 out.to_csv("E:/Monsoon_Data/Result_Final.csv",index=False)
-
-
-
-
-## set gap(N1)-->(0-18)(18-38)
-## N8-->(0-4)(4-rest)
-# Get cube rooted N2,N15,N23
-# N3 divide half for 3.25,N6 half by 3.4,N11 half by 12.5,N21 half by .9
-# N16-->(0,1)
-# N23 half by 3.8
 

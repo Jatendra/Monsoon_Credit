@@ -535,19 +535,14 @@ train_x,test_x,train_y,test_y=train_test_split(data1,y,test_size=.2,random_state
 
 classifier=GradientBoostingClassifier(random_state=random_state)
 
-cv_results=cross_val_score(classifier, train_x, y =train_y, scoring = "accuracy", cv = 4, n_jobs=4, verbose = 1)
-cv_results.mean()
-
 ## Parameter Tunning
 
-# Gradient boosting tunning
 
-
-gb_param_grid = {'n_estimators' : [200],
-                 'learning_rate': [.1],
-                 'max_depth': [3],
-                 'max_features' : [0.3],
-                 'min_samples_leaf':[150]
+gb_param_grid = {'n_estimators' : [100,200,300],
+                 'learning_rate': [.1,.05,.01],
+                 'max_depth': [3,5,8],
+                 'max_features' : [0.3,1],
+                 'min_samples_leaf':[100,150,200,250]
                 }
 
 gsGBC = GridSearchCV(classifier,param_grid = gb_param_grid, cv=4, scoring="accuracy", n_jobs= 4, verbose = 1)
